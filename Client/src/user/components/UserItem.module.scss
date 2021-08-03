@@ -1,0 +1,45 @@
+.userItem {
+  &__content {
+    padding: 1rem;
+    margin: 0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
+    border-radius: 6px;
+    overflow: hidden;
+    background-color: #333;
+    transition: background-color 0.2s ease-out;
+  }
+
+  &__content:hover {
+    background-color: #f1c40f;
+  }
+
+  & a {
+    text-decoration: none;
+  }
+
+  &__img {
+    width: 60px;
+    height: 60px;
+  }
+
+  &__info {
+    margin-left: 20px;
+  }
+
+  &__info h2 {
+    font-size: 1.4rem;
+    text-transform: capitalize;
+    transition: color 0.2s ease-out;
+    color: #f1c40f;
+  }
+
+  &:hover h2,
+  &:hover h3 {
+    color: #333;
+  }
+
+  &__info h3 {
+    font-size: 1.2rem;
+    color: #fff;
+  }
+}
