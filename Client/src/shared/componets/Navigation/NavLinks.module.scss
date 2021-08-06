@@ -47,17 +47,17 @@
 
   a {
     text-decoration: none;
-    color: #fff;
+    color: $color-white;
     transition: 0.2s color ease-out;
     text-transform: capitalize;
     font-weight: 500;
 
     &:hover {
-      color: #bbb;
+      color: $color-grey-light-4;
     }
 
     @media only screen and (min-width: $bp-768) {
-      color: #333;
+      color: $color-black;
     }
   }
 }

@@ -5,7 +5,7 @@
   width: 100vw;
   padding: 20px;
   align-items: center;
-  background-color: #333;
+  background-color: $color-grey-dark-1;
   position: relative;
   position: fixed;
   top: 0;
@@ -15,10 +15,10 @@
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.26);
 
   @media only screen and (min-width: $bp-768) {
-    background-color: transparent;
+    background-color: $color-grey-light-2;
     position: relative;
     justify-content: space-between;
-    background-color: #eee;
+    box-shadow: none;
   }
 }
 
