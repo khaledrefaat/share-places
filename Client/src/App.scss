@@ -19,5 +19,9 @@ body {
   font-weight: 400;
   position: relative;
   max-width: 100vw;
-  overflow: hidden;
+  overflow-x: hidden;
+}
+
+main {
+  margin-top: 5rem;
 }

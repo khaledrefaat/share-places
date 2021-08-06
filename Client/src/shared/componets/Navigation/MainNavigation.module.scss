@@ -1,0 +1,81 @@
+@import '../Variables.scss';
+
+.menuBtn {
+  cursor: pointer;
+  margin-left: auto;
+  margin-right: 20px;
+  width: 40px;
+  height: 40px;
+  background-color: transparent;
+  border-color: transparent;
+
+  span {
+    width: 20px;
+    height: 2px;
+    background-color: #fff;
+    display: block;
+  }
+
+  @media only screen and (min-width: $bp-600) {
+    margin-right: 100px;
+  }
+
+  @media only screen and (min-width: $bp-768) {
+    // to override display flex from bootstrap class
+    display: none !important;
+  }
+}
+
+.brand {
+  text-transform: uppercase;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700;
+  font-size: 1.2rem;
+  letter-spacing: 2px;
+  margin-bottom: 0;
+
+  a {
+    color: #fff;
+    text-decoration: none;
+    @media only screen and (min-width: $bp-768) {
+      color: #333;
+    }
+  }
+}
+
+.nav {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background-color: #333;
+  width: 100%;
+  padding: 20px 0 10px 0;
+  pointer-events: none;
+  visibility: hidden;
+  opacity: 0;
+  transition: all 0.3s ease-out;
+  z-index: 99;
+
+  @media only screen and (min-width: $bp-768) {
+    margin: 0;
+    position: relative;
+    padding: 0;
+    background-color: transparent;
+    pointer-events: all;
+    visibility: visible;
+    opacity: 1;
+    background-color: #eee;
+    width: 60%;
+  }
+
+  @media only screen and (min-width: $bp-1100) {
+    width: 45%;
+  }
+}
+
+.visible {
+  visibility: visible;
+  opacity: 1;
+  pointer-events: all;
+}

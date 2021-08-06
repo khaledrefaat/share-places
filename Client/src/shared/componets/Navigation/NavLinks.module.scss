@@ -1,0 +1,63 @@
+@import '../Variables.scss';
+
+.list {
+  list-style: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-direction: column;
+  padding-left: 10px;
+
+  @media only screen and (min-width: $bp-768) {
+    flex-direction: row;
+    align-items: center;
+    margin: 0;
+    position: relative;
+    padding: 0;
+    background-color: transparent;
+    pointer-events: all;
+    visibility: visible;
+    opacity: 1;
+  }
+
+  li {
+    cursor: pointer;
+  }
+
+  li:last-of-type {
+    margin: 10px;
+    @media only screen and (min-width: $bp-768) {
+      margin: 0;
+      margin-left: 15px;
+      margin-right: 50px;
+    }
+  }
+
+  li:not(:last-of-type) {
+    font-size: 1rem;
+    margin: 10px 10px;
+    @media only screen and (min-width: $bp-768) {
+      margin: 0 8px;
+      font-size: 1rem;
+    }
+    @media only screen and (min-width: $bp-1100) {
+      margin: 0 15px;
+    }
+  }
+
+  a {
+    text-decoration: none;
+    color: #fff;
+    transition: 0.2s color ease-out;
+    text-transform: capitalize;
+    font-weight: 500;
+
+    &:hover {
+      color: #bbb;
+    }
+
+    @media only screen and (min-width: $bp-768) {
+      color: #333;
+    }
+  }
+}
