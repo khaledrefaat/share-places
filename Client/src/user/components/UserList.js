@@ -6,7 +6,6 @@ import { userList } from './UserList.module.scss';
 
 export class UserList extends Component {
   render() {
-    console.log(this.props.length);
     if (this.props.length === 0)
       return (
         <div className="d-flex justify-content-center align-items-center text-center">

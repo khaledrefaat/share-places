@@ -23,7 +23,7 @@ const MainNavigation = () => {
         <span />
       </button>
       <nav className={`${nav} ${isNavHidden ? '' : visible}`}>
-        <NavLinks />
+        <NavLinks onNavItemClick={() => setIsNavHidden(true)} />
       </nav>
     </MainHeader>
   );
