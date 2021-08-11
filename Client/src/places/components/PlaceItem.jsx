@@ -17,19 +17,24 @@ const PlaceItem = ({
   location,
 }) => {
   return (
-    <li className={placeItem}>
-      <div className={placeItem__image}>
-        <img src={image} alt={title} />
-      </div>
-      <div className={placeItem__info}>
-        <h2>{title}</h2>
+    <li className={`${placeItem} card`}>
+      <img
+        src={image}
+        alt={title}
+        className={`${placeItem__image} card-img-top`}
+      />
+      <div className={`${placeItem__info} card-body`}>
+        <h2 className="card-title">{title}</h2>
         <h3>{adress}</h3>
         <p>{description}</p>
+        <hr />
       </div>
-      <div className={placeItem__actions}>
-        <button>View Place on map</button>
-        <button>Edit</button>
-        <button>Delete</button>
+      <div
+        className={`${placeItem__actions} card-body d-flex justify-content-evenly`}
+      >
+        <button className="btn btn-outline-success">View on map</button>
+        <button className="btn btn-primary">Edit</button>
+        <button className="btn btn-danger">Delete</button>
       </div>
     </li>
   );

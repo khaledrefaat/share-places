@@ -7,7 +7,7 @@ import { placeList } from './PlaceList.module.scss';
 const PlaceList = props => {
   if (props.items && props.items.length > 0) {
     return (
-      <ul className="placeList">
+      <ul className={`${placeList} d-flex justify-content-around`}>
         {props.items.map(
           ({
             id,
