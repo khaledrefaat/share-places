@@ -1,4 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
+
+import Modal from '../../shared/componets/UiElements/Modal';
 
 import {
   placeItem,
@@ -14,29 +16,46 @@ const PlaceItem = ({
   description,
   adress,
   creator,
-  location,
+  coordinates,
 }) => {
+  const [showMap, setShowMap] = useState(false);
+
+  const openMapHandler = () => setShowMap(true);
+  const closeMapHandler = () => setShowMap(false);
+  console.log(adress);
   return (
-    <li className={`${placeItem} card`}>
-      <img
-        src={image}
-        alt={title}
-        className={`${placeItem__image} card-img-top`}
-      />
-      <div className={`${placeItem__info} card-body`}>
-        <h2 className="card-title">{title}</h2>
-        <h3>{adress}</h3>
-        <p>{description}</p>
-        <hr />
-      </div>
-      <div
-        className={`${placeItem__actions} card-body d-flex justify-content-evenly`}
+    <>
+      <Modal
+        show={showMap}
+        onCancel={closeMapHandler}
+        header={adress}
+        footer={<button>Close</button>}
       >
-        <button className="btn btn-outline-success">View on map</button>
-        <button className="btn btn-primary">Edit</button>
-        <button className="btn btn-danger">Delete</button>
-      </div>
-    </li>
+        <h3>The Map</h3>
+      </Modal>
+      <li className={`${placeItem} card`}>
+        <img
+          src={image}
+          alt={title}
+          className={`${placeItem__image} card-img-top`}
+        />
+        <div className={`${placeItem__info} card-body`}>
+          <h2 className="card-title">{title}</h2>
+          <h3>{adress}</h3>
+          <p>{description}</p>
+          <hr />
+        </div>
+        <div
+          className={`${placeItem__actions} card-body d-flex justify-content-evenly`}
+        >
+          <button className="btn btn-outline-success" onClick={openMapHandler}>
+            View on map
+          </button>
+          <button className="btn btn-primary">Edit</button>
+          <button className="btn btn-danger">Delete</button>
+        </div>
+      </li>
+    </>
   );
 };
 

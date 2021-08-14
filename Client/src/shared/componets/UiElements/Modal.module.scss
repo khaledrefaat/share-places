@@ -1,0 +1,33 @@
+.modal {
+  display: flex;
+  background-color: rgba(119, 119, 119, 0.7);
+  align-items: center;
+  justify-content: center;
+
+  &__content {
+    background-color: #fff;
+    width: 80vw;
+    border: none;
+    @media only screen and (min-width: 56.25em) {
+      width: 50vw;
+    }
+  }
+
+  &__header {
+    background-color: #341f97;
+  }
+
+  h2 {
+    font-size: 25px;
+    color: #fff;
+  }
+
+  &__form {
+    height: 30vh;
+  }
+
+  &__footer {
+    text-align: right;
+    padding: 10px;
+  }
+}
