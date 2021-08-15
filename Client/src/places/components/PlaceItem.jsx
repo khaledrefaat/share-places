@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import Modal from '../../shared/componets/UiElements/Modal';
+import CustomModal from '../../shared/componets/UiElements/CustomModal';
 
 import {
   placeItem,
@@ -18,21 +18,15 @@ const PlaceItem = ({
   creator,
   coordinates,
 }) => {
-  const [showMap, setShowMap] = useState(false);
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
 
-  const openMapHandler = () => setShowMap(true);
-  const closeMapHandler = () => setShowMap(false);
-  console.log(adress);
   return (
     <>
-      <Modal
-        show={showMap}
-        onCancel={closeMapHandler}
-        header={adress}
-        footer={<button>Close</button>}
-      >
+      <CustomModal onClose={handleClose} open={open} header={adress}>
         <h3>The Map</h3>
-      </Modal>
+      </CustomModal>
       <li className={`${placeItem} card`}>
         <img
           src={image}
@@ -48,7 +42,7 @@ const PlaceItem = ({
         <div
           className={`${placeItem__actions} card-body d-flex justify-content-evenly`}
         >
-          <button className="btn btn-outline-success" onClick={openMapHandler}>
+          <button className="btn btn-outline-success" onClick={handleOpen}>
             View on map
           </button>
           <button className="btn btn-primary">Edit</button>
