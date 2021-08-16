@@ -1,9 +1,17 @@
 import React, { useState } from 'react';
 
-import Button from '@material-ui/core/Button';
-import { withStyles } from '@material-ui/core/styles';
-import CustomModal from '../../shared/componets/UiElements/CustomModal';
+import { withStyles, makeStyles } from '@material-ui/core/styles';
 import { green } from '@material-ui/core/colors';
+
+import Button from '@material-ui/core/Button';
+import Card from '@material-ui/core/Card';
+import CardActionArea from '@material-ui/core/CardActionArea';
+import CardActions from '@material-ui/core/CardActions';
+import CardContent from '@material-ui/core/CardContent';
+import CardMedia from '@material-ui/core/CardMedia';
+import Typography from '@material-ui/core/Typography';
+
+import CustomModal from '../../shared/componets/UiElements/CustomModal';
 
 import {
   placeItem,
@@ -42,21 +50,23 @@ const PlaceItem = ({
       <CustomModal onClose={handleClose} open={open} header={adress}>
         <h3>The Map</h3>
       </CustomModal>
-      <li className={`${placeItem} card`}>
-        <img
-          src={image}
-          alt={title}
-          className={`${placeItem__image} card-img-top`}
-        />
-        <div className={`${placeItem__info} card-body`}>
-          <h2 className="card-title">{title}</h2>
-          <h3>{adress}</h3>
-          <p>{description}</p>
-          <hr />
-        </div>
-        <div
-          className={`${placeItem__actions} card-body d-flex justify-content-evenly`}
-        >
+
+      <Card onClick={handleOpen} className={placeItem}>
+        <CardActionArea>
+          <CardMedia className={placeItem__image} image={image} title={title} />
+          <CardContent>
+            <Typography gutterBottom variant="h4" component="h2">
+              {title}
+            </Typography>
+            <Typography gutterBottom variant="h5" component="h3">
+              {adress}
+            </Typography>
+            <Typography variant="body2" color="textSecondary" component="p">
+              {description}
+            </Typography>
+          </CardContent>
+        </CardActionArea>
+        <CardActions>
           <ColorButton onClick={handleOpen} variant="outlined" color="primary">
             View On map
           </ColorButton>
@@ -66,8 +76,8 @@ const PlaceItem = ({
           <Button variant="contained" color="secondary">
             Delete
           </Button>
-        </div>
-      </li>
+        </CardActions>
+      </Card>
     </>
   );
 };
