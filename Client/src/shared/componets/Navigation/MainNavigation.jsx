@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import MainHeader from './MainHeader';
 import NavLinks from './NavLinks';
 
+import MenuIcon from '@material-ui/icons/Menu';
 import { menuBtn, brand, nav, visible } from './MainNavigation.module.scss';
 
 const MainNavigation = () => {
@@ -15,12 +16,10 @@ const MainNavigation = () => {
         <Link to="/">your places</Link>
       </h1>
       <button
-        className={`${menuBtn} d-flex align-items-center justify-content-center flex-column`}
+        className={`${menuBtn}`}
         onClick={() => setIsNavHidden(isNavHidden => !isNavHidden)}
       >
-        <span className="mb-1" />
-        <span className="mb-1" />
-        <span />
+        <MenuIcon />
       </button>
       <nav className={`${nav} ${isNavHidden ? '' : visible}`}>
         <NavLinks onNavItemClick={() => setIsNavHidden(true)} />

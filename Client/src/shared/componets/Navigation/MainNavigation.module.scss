@@ -9,12 +9,8 @@
   background-color: transparent;
   border-color: transparent;
 
-  span {
-    width: 20px;
-    height: 2px;
-    background-color: $color-white;
-
-    display: block;
+  svg {
+    color: $color-white;
   }
 
   @media only screen and (min-width: $bp-600) {
@@ -23,7 +19,7 @@
 
   @media only screen and (min-width: $bp-768) {
     // to override display flex from bootstrap class
-    display: none !important;
+    display: none;
   }
 }
 

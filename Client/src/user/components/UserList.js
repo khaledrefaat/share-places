@@ -8,12 +8,12 @@ export class UserList extends Component {
   render() {
     if (this.props.length === 0)
       return (
-        <div className="d-flex justify-content-center align-items-center text-center">
+        <div className="center">
           <h2>There is no items</h2>
         </div>
       );
     return (
-      <ul className={`d-flex justify-content-around ${userList}`}>
+      <ul className={`${userList}`}>
         {this.props.items.map(user => (
           <UserItem
             key={user.id}

@@ -1,5 +1,6 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
+import Container from '@material-ui/core/Container';
 
 import PlaceList from '../components/PlaceList';
 
@@ -38,9 +39,9 @@ const UserPlaces = () => {
   const loadedPlace = DUMMY_PLACES.filter(place => place.creator === userId);
 
   return (
-    <div className="contauiner">
+    <Container maxWidth="md">
       <PlaceList items={loadedPlace} />
-    </div>
+    </Container>
   );
 };
 

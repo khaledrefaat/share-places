@@ -7,6 +7,8 @@
     overflow: hidden;
     background-color: #333;
     transition: background-color 0.2s ease-out;
+    display: flex;
+    justify-content: space-around;
   }
 
   &__content:hover {

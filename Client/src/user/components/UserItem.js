@@ -16,10 +16,8 @@ export class UserItem extends Component {
     return (
       <li className={userItem}>
         <Link to={`/${id}/places`}>
-          <div className={`${userItem__content} d-flex justify-content-around`}>
-            <div
-              className={`${userItem__img} d-flex justify-content-center align-items-center`}
-            >
+          <div className={`${userItem__content}`}>
+            <div className={`${userItem__img} center`}>
               <Avatar src={img} alt={name} />
             </div>
             <div className={`${userItem__info}`}>
