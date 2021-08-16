@@ -9,7 +9,7 @@ const MainHeader = ({ children }) => {
     const timerId = setTimeout(() => {
       window.addEventListener('scroll', () => {
         const offset = window.scrollY;
-        if (offset > 75) setScrolled(true);
+        if (offset > 100) setScrolled(true);
         else setScrolled(false);
       });
     }, 1000);

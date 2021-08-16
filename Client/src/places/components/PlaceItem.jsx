@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 
+import Button from '@material-ui/core/Button';
+import { withStyles } from '@material-ui/core/styles';
 import CustomModal from '../../shared/componets/UiElements/CustomModal';
+import { green } from '@material-ui/core/colors';
 
 import {
   placeItem,
@@ -22,6 +25,18 @@ const PlaceItem = ({
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
+  const ColorButton = withStyles(theme => ({
+    root: {
+      color: green[700],
+      backgroundColor: 'transparent',
+      borderColor: green[700],
+      '&:hover': {
+        backgroundColor: green[700],
+        color: '#ffffff',
+      },
+    },
+  }))(Button);
+
   return (
     <>
       <CustomModal onClose={handleClose} open={open} header={adress}>
@@ -42,11 +57,15 @@ const PlaceItem = ({
         <div
           className={`${placeItem__actions} card-body d-flex justify-content-evenly`}
         >
-          <button className="btn btn-outline-success" onClick={handleOpen}>
-            View on map
-          </button>
-          <button className="btn btn-primary">Edit</button>
-          <button className="btn btn-danger">Delete</button>
+          <ColorButton onClick={handleOpen} variant="outlined" color="primary">
+            View On map
+          </ColorButton>
+          <Button variant="contained" color="primary">
+            Edit
+          </Button>
+          <Button variant="contained" color="secondary">
+            Delete
+          </Button>
         </div>
       </li>
     </>

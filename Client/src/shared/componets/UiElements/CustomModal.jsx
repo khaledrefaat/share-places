@@ -9,7 +9,7 @@ import {
   modal__header,
   modal__form,
   modal__footer,
-} from './Modal.module.scss';
+} from './CustomModal.module.scss';
 
 const CustomModal = props => {
   return (
