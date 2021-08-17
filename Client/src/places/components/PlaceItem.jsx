@@ -12,13 +12,9 @@ import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
 
 import CustomModal from '../../shared/componets/UiElements/CustomModal';
+import Map from '../../shared/componets/UiElements/Map';
 
-import {
-  placeItem,
-  placeItem__image,
-  placeItem__info,
-  placeItem__actions,
-} from './PlaceItem.module.scss';
+import { placeItem, placeItem__image } from './PlaceItem.module.scss';
 
 const PlaceItem = ({
   id,
@@ -48,7 +44,7 @@ const PlaceItem = ({
   return (
     <>
       <CustomModal onClose={handleClose} open={open} header={adress}>
-        <h3>The Map</h3>
+        <Map center={coordinates} zoom={16} />
       </CustomModal>
 
       <Card onClick={handleOpen} className={placeItem}>
