@@ -11,7 +11,7 @@ import './App.scss';
 import Users from './user/containers/Users';
 import NewPlace from './places/containers/NewPlace';
 import UserPlaces from './places/containers/UserPlaces';
-import MainNavigation from './shared/componets/Navigation/MainNavigation';
+import MainNavigation from './shared/components/Navigation/MainNavigation';
 
 const App = () => {
   return (

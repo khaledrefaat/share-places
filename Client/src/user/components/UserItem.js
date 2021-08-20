@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 
-import Avatar from '../../shared/componets/UiElements/Avatar';
+import Avatar from '../../shared/components/UiElements/Avatar';
 
 import {
   userItem,

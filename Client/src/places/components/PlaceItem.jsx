@@ -11,8 +11,8 @@ import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
 
-import CustomModal from '../../shared/componets/UiElements/CustomModal';
-import Map from '../../shared/componets/UiElements/Map';
+import CustomModal from '../../shared/components/UiElements/CustomModal';
+import Map from '../../shared/components/UiElements/Map';
 
 import { placeItem, placeItem__image } from './PlaceItem.module.scss';
 
