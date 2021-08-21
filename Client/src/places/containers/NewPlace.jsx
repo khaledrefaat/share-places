@@ -1,6 +1,7 @@
 import React, { useCallback, useReducer } from 'react';
 
 import FormControl from '@material-ui/core/FormControl';
+import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
 
 import Input from '../../shared/components/FormElements/Input';
@@ -9,7 +10,7 @@ import {
   VALIDATOR_MINLENGTH,
 } from '../../shared/util/validators';
 
-import { placeForm } from './NewPlace.module.scss';
+import { input, placeForm } from './NewPlace.module.scss';
 
 const formReducer = (state, action) => {
   switch (action.type) {
@@ -54,27 +55,49 @@ const NewPlace = () => {
     dispatch({ type: 'INPUT_CHANGE', value, isValid, inputId: id });
   }, []);
 
-  console.log(formState.isValid);
+  const submitHandler = e => {
+    e.preventDefault();
+    console.log(formState.inputs);
+  };
 
   return (
-    <form className={placeForm}>
+    <form onSubmit={submitHandler} className={placeForm}>
       <FormControl>
-        <Input
-          id="title"
-          elementType="input"
-          onInput={inputHandler}
-          validators={[VALIDATOR_REQUIRE()]}
-          errorText="Please Enter a valid title"
-          label="Title"
-        />
-        <Input
-          id="description"
-          elementType="input"
-          onInput={inputHandler}
-          validators={[VALIDATOR_MINLENGTH(5)]}
-          errorText="Please Enter a valid description (at least 5 characters)"
-          label="Description"
-        />
+        <Box mb={2}>
+          <Input
+            id="title"
+            onInput={inputHandler}
+            validators={[VALIDATOR_REQUIRE()]}
+            errorText="Please enter a valid title."
+            label="Title"
+            required
+            className={input}
+          />
+        </Box>
+        <Box mb={2}>
+          <Input
+            id="description"
+            onInput={inputHandler}
+            validators={[VALIDATOR_MINLENGTH(5)]}
+            errorText="Please enter a valid description (at least 5 characters)."
+            label="Description"
+            multiline
+            minRows="5"
+            required
+            className={input}
+          />
+        </Box>
+        <Box mb={2}>
+          <Input
+            id="adress"
+            onInput={inputHandler}
+            validators={[VALIDATOR_REQUIRE()]}
+            errorText="Please enter a valid adress."
+            label="Adress"
+            required
+            className={input}
+          />
+        </Box>
         <Button
           type="submit"
           variant="contained"
