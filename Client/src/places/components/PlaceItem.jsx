@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import { withStyles, makeStyles } from '@material-ui/core/styles';
+import { withStyles } from '@material-ui/core/styles';
 import { green } from '@material-ui/core/colors';
 
 import Button from '@material-ui/core/Button';
