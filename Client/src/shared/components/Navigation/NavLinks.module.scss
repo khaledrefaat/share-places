@@ -18,6 +18,7 @@
     pointer-events: all;
     visibility: visible;
     opacity: 1;
+    justify-content: flex-end;
   }
 
   li {
@@ -45,7 +46,8 @@
     }
   }
 
-  a {
+  a,
+  .logout {
     text-decoration: none;
     color: $color-white;
     transition: 0.2s color ease-out;

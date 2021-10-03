@@ -1,8 +1,9 @@
-import React, { useCallback, useReducer } from 'react';
+import React from 'react';
 
 import FormControl from '@material-ui/core/FormControl';
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
+import { useForm } from '../../shared/hooks/form-hook';
 
 import Input from '../../shared/components/FormElements/Input';
 import {
@@ -12,33 +13,9 @@ import {
 
 import { input, placeForm } from './NewPlace.module.scss';
 
-const formReducer = (state, action) => {
-  switch (action.type) {
-    case 'INPUT_CHANGE':
-      let formIsValid = true;
-      for (let inputId in state.inputs) {
-        if (inputId === action.inputId) {
-          formIsValid = formIsValid && action.isValid;
-        } else {
-          formIsValid = formIsValid && state.inputs[inputId].isValid;
-        }
-      }
-      return {
-        ...state,
-        inputs: {
-          ...state.inputs,
-          [action.inputId]: { value: action.value, isValid: action.isValid },
-        },
-        isValid: formIsValid,
-      };
-    default:
-      return state;
-  }
-};
-
 const NewPlace = () => {
-  const [formState, dispatch] = useReducer(formReducer, {
-    inputs: {
+  const [formState, inputHandler] = useForm(
+    {
       title: {
         value: '',
         isValid: false,
@@ -48,16 +25,10 @@ const NewPlace = () => {
         isValid: false,
       },
     },
-    isValid: false,
-  });
-
-  const inputHandler = useCallback((id, value, isValid) => {
-    dispatch({ type: 'INPUT_CHANGE', value, isValid, inputId: id });
-  }, []);
-
+    false
+  );
   const submitHandler = e => {
     e.preventDefault();
-    console.log(formState.inputs);
   };
 
   return (

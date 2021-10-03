@@ -1,3 +1,26 @@
 .placeList {
   list-style: none;
 }
+
+.box {
+  text-align: center;
+  text-transform: capitalize;
+  width: max-content;
+  padding: 20px 40px;
+  position: absolute;
+  top: 25%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.15);
+  border-radius: 8px;
+  background-color: #eee;
+}
+
+.box h2 {
+  margin-bottom: 10px;
+}
+
+.link {
+  text-decoration: none;
+  color: #fff;
+}

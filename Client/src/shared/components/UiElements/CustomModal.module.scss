@@ -26,11 +26,14 @@
   }
 
   &__form {
-    height: 60vh;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     padding: 5px 10px;
+  }
+
+  &__map {
+    height: 60vh;
   }
 
   &__footer {

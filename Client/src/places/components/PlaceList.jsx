@@ -1,8 +1,9 @@
 import React from 'react';
 
 import PlaceItem from './PlaceItem';
-
-import { placeList } from './PlaceList.module.scss';
+import Button from '@material-ui/core/Button';
+import { Link } from 'react-router-dom';
+import { placeList, box, link } from './PlaceList.module.scss';
 
 const PlaceList = props => {
   if (props.items && props.items.length > 0) {
@@ -26,9 +27,13 @@ const PlaceList = props => {
     );
   }
   return (
-    <div>
-      <h2>no places found!!</h2>
-      <button>Share Place</button>
+    <div className={box}>
+      <h2>no places were found. maybe create one?</h2>
+      <Link className={link} to="/places/new">
+        <Button variant="contained" color="primary">
+          Share Place
+        </Button>
+      </Link>
     </div>
   );
 };

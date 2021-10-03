@@ -10,9 +10,42 @@ import {
   modal__header,
   modal__form,
   modal__footer,
+  modal__map,
 } from './CustomModal.module.scss';
 
 const CustomModal = props => {
+  const renderBox = props.map ? (
+    <Box width="75%" className={modal__box}>
+      <div className={modal__header}>
+        <Typography id="modal-modal-title" variant="h5" component="h6">
+          {props.header}
+        </Typography>
+      </div>
+      <form
+        onSubmit={props.onSubmit ? props.onSubmit : e => e.preventDefault()}
+        className={`${modal__form} ${modal__map}`}
+      >
+        {props.children}
+        <footer className={modal__footer}>{props.footer}</footer>
+      </form>
+    </Box>
+  ) : (
+    <Box width="50%" className={modal__box}>
+      <div className={modal__header}>
+        <Typography id="modal-modal-title" variant="h5" component="h6">
+          {props.header}
+        </Typography>
+      </div>
+      <form
+        onSubmit={props.onSubmit ? props.onSubmit : e => e.preventDefault()}
+        className={`${modal__form}`}
+      >
+        {props.children}
+        <footer className={modal__footer}>{props.footer}</footer>
+      </form>
+    </Box>
+  );
+
   return (
     <Modal
       open={props.open}
@@ -20,25 +53,7 @@ const CustomModal = props => {
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
     >
-      <Box width="75%" className={modal__box}>
-        <div className={modal__header}>
-          <Typography id="modal-modal-title" variant="h5" component="h6">
-            {props.header}
-          </Typography>
-        </div>
-        <form
-          onSubmit={props.onSubmit ? props.onSubmit : e => e.preventDefault()}
-          className={modal__form}
-        >
-          {props.children}
-          <footer className={modal__footer}>
-            {props.footer}
-            <Button variant="contained" color="primary" onClick={props.onClose}>
-              Close
-            </Button>
-          </footer>
-        </form>
-      </Box>
+      {renderBox}
     </Modal>
   );
 };
