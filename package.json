@@ -1,0 +1,27 @@
+{
+  "name": "share-places",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon app.js",
+    "start-server": "node app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/khaledrefaat/share-places.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/khaledrefaat/share-places/issues"
+  },
+  "homepage": "https://github.com/khaledrefaat/share-places#readme",
+  "dependencies": {
+    "axios": "^0.22.0",
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1",
+    "express-validator": "^6.12.2",
+    "uuid": "^8.3.2"
+  }
+}
