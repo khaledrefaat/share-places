@@ -1,56 +1,49 @@
 const uuid = require('uuid').v4;
 const { validationResult } = require('express-validator');
+const mongoose = require('mongoose');
 
 const HttpError = require('../models/http-error');
 const getCoordsForAdress = require('../util/location');
+const Place = require('../models/place');
+const User = require('../models/user');
 
-let DUMMY_DATA = [
-  {
-    id: 'p1',
-    title: 'Empire State Building',
-    description: 'one of the most famous sky bulding in the world',
-    imageUrl:
-      'https://images.unsplash.com/photo-1428366890462-dd4baecf492b?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=334&q=80',
-    adress: '20 W 34th St, New York, NY 10001',
-    location: {
-      lat: 40.7481572,
-      lng: -73.9848175,
-    },
-    creator: 'u1',
-  },
-  {
-    id: 'p2',
-    title: 'Kensington Palace',
-    description:
-      'ensington Palace is a royal residence set in Kensington Gardens, in the Royal Borough of Kensington and Chelsea in London',
-    imageUrl:
-      'https://images.unsplash.com/photo-1565373351918-440f115968fa?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=667&q=80',
-    adress: 'Kensington Gardens, London W8 4PX',
-    location: {
-      lat: 51.5049757,
-      lng: -0.1854923,
-    },
-    creator: 'u1',
-  },
-];
-
-exports.getPlaceById = (req, res, next) => {
+exports.getPlaceById = async (req, res, next) => {
   const { pid } = req.params;
-  const place = DUMMY_DATA.filter(({ id }) => id === pid);
+
+  let place;
+  try {
+    place = await Place.findById(pid);
+  } catch (err) {
+    console.log(err);
+    return next(
+      new HttpError('Something went wrong, could not find a place.', 500)
+    );
+  }
+
   if (place.length === 0)
     throw new HttpError('Could not find a place with the provided id.');
 
-  res.json(place);
+  res.json({ place: place.toObject({ getters: true }) });
 };
 
-exports.getPlacesByUserId = (req, res, next) => {
+exports.getPlacesByUserId = async (req, res, next) => {
   const { uid } = req.params;
-  const userPlaces = DUMMY_DATA.filter(({ creator }) => creator === uid);
+
+  let userPlaces;
+  try {
+    userPlaces = await Place.find({ creator: uid });
+  } catch (err) {
+    console.log(err);
+    return next(
+      new HttpError('Could not find a place with the provided user id.', 500)
+    );
+  }
   if (userPlaces.length === 0 || !userPlaces)
     return next(
       new HttpError('Could not find a place with the provided user id.', 404)
     );
-  res.json(userPlaces);
+
+  res.json({ userPlaces });
 };
 
 exports.createPlace = async (req, res, next) => {
@@ -58,9 +51,9 @@ exports.createPlace = async (req, res, next) => {
   const { title, description, adress, creator } = req.body;
 
   if (!validationErrorResult.isEmpty())
-    next(new HttpError('Invalid Inputs!', 422));
+    return next(new HttpError('Invalid Inputs!', 422));
 
-  let coordinates;
+  let coordinates, user;
   try {
     coordinates = await getCoordsForAdress(adress);
   } catch (err) {
@@ -68,44 +61,108 @@ exports.createPlace = async (req, res, next) => {
     return next(err);
   }
 
-  const createdPlace = {
-    id: uuid(),
+  const createdPlace = new Place({
     title,
     description,
     location: coordinates,
     adress,
     creator,
-  };
+    image:
+      'https://images.unsplash.com/photo-1513326738677-b964603b136d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=449&q=80',
+  });
 
-  DUMMY_DATA.push(createdPlace);
+  try {
+    user = await User.findById(creator);
+  } catch (err) {
+    console.log(err);
+    return next(
+      new HttpError('Creating place failed, Please try again later.', 500)
+    );
+  }
+
+  if (!user || user.results) {
+    return next(new HttpError("Could'nt find user fo provided id", 404));
+  }
+
+  try {
+    const sess = await mongoose.startSession();
+    sess.startTransaction();
+    await createdPlace.save({ session: sess });
+    user.places.push(createdPlace);
+    await user.save({ session: sess });
+    sess.commitTransaction();
+  } catch (err) {
+    return next(
+      new HttpError('Something went wrong, could not create a place.', 500)
+    );
+  }
+
   res.status(201).json({ place: createdPlace });
 };
 
-exports.editPlace = (req, res, next) => {
+exports.editPlace = async (req, res, next) => {
   const { pid } = req.params;
 
   const validationErrorResult = validationResult(req);
 
   if (!validationErrorResult.isEmpty())
-    next(new HttpError('Invalid Inputs!', 422));
+    return next(new HttpError('Invalid Inputs!', 422));
 
-  const updatedPlace = { ...DUMMY_DATA.find(({ id }) => id === pid) };
-  const index = DUMMY_DATA.findIndex(places => places.id === pid);
   const { title, description } = req.body;
-  updatedPlace.title = title;
-  updatedPlace.description = description;
-  DUMMY_DATA[index] = updatedPlace;
-  console.log(index);
-  res.status(200).json({ place: updatedPlace });
+
+  let place;
+
+  try {
+    place = await Place.findById(pid);
+  } catch (err) {
+    console.log(err);
+    return next(
+      new HttpError("Something went wrong, Could'nt update the place.", 500)
+    );
+  }
+
+  place.title = title;
+  place.description = description;
+  try {
+    await place.save();
+  } catch (err) {
+    console.log(err);
+    return next(
+      new HttpError("Something went wrong, Could'nt update the place.", 500)
+    );
+  }
+  res.status(200).json({ place });
 };
 
-exports.deletePlace = (req, res, next) => {
+exports.deletePlace = async (req, res, next) => {
   const { pid } = req.params;
 
-  if (!DUMMY_DATA.find(({ id }) => id === pid))
-    throw new HttpError('Could not find a place with the provided id.');
+  let place;
+  try {
+    place = await Place.findById(pid).populate('creator');
+  } catch (err) {
+    console.log(err);
+    return next(
+      new HttpError("Something Went wrong, Could'nt delete the place.", 500)
+    );
+  }
 
-  DUMMY_DATA = DUMMY_DATA.filter(({ id }) => !id === pid);
+  if (!place)
+    return next(new HttpError("Could'nt find place for provided id.", 404));
+
+  try {
+    const sess = await mongoose.startSession();
+    sess.startTransaction();
+    await place.remove({ session: sess });
+    place.creator.places.pull(place);
+    await place.creator.save({ session: sess });
+    await sess.commitTransaction();
+  } catch (err) {
+    console.log(err);
+    return next(
+      new HttpError("Something Went wrong, Could'nt delete the place.", 500)
+    );
+  }
 
   res.status(200).json({ message: 'Deleted place.' });
 };
