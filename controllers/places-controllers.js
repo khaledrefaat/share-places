@@ -28,22 +28,25 @@ exports.getPlaceById = async (req, res, next) => {
 
 exports.getPlacesByUserId = async (req, res, next) => {
   const { uid } = req.params;
+  console.log(
+    'working -----------------------------------------------------------------------'
+  );
 
-  let userPlaces;
+  let userWithPlaces;
   try {
-    userPlaces = await Place.find({ creator: uid });
+    userWithPlaces = await User.findById(uid).populate('places');
   } catch (err) {
     console.log(err);
     return next(
       new HttpError('Could not find a place with the provided user id.', 500)
     );
   }
-  if (userPlaces.length === 0 || !userPlaces)
+  if (userWithPlaces.length === 0 || !userWithPlaces)
     return next(
       new HttpError('Could not find a place with the provided user id.', 404)
     );
 
-  res.json({ userPlaces });
+  res.json({ userWithPlaces });
 };
 
 exports.createPlace = async (req, res, next) => {
