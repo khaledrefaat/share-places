@@ -19,12 +19,15 @@ import Auth from './user/containers/Auth';
 
 const App = () => {
   const [isLoggedIn, setisLoggedIn] = useState(false);
+  const [userId, setUserId] = useState(false);
 
-  const login = useCallback(() => {
+  const login = useCallback(uid => {
     setisLoggedIn(true);
+    setUserId(uid);
   }, []);
   const logout = useCallback(() => {
     setisLoggedIn(false);
+    setUserId(null);
   }, []);
 
   const routes = isLoggedIn ? (
@@ -59,9 +62,7 @@ const App = () => {
   );
 
   return (
-    <AuthContext.Provider
-      value={{ isLoggedIn: isLoggedIn, login: login, logout: logout }}
-    >
+    <AuthContext.Provider value={{ isLoggedIn, login, logout, userId }}>
       <Router>
         <MainNavigation />
         <main>{routes}</main>

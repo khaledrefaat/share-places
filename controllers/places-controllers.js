@@ -1,4 +1,3 @@
-const uuid = require('uuid').v4;
 const { validationResult } = require('express-validator');
 const mongoose = require('mongoose');
 
@@ -23,7 +22,7 @@ exports.getPlaceById = async (req, res, next) => {
   if (place.length === 0)
     throw new HttpError('Could not find a place with the provided id.');
 
-  res.json({ place: place.toObject({ getters: true }) });
+  res.json({ place });
 };
 
 exports.getPlacesByUserId = async (req, res, next) => {
@@ -71,7 +70,7 @@ exports.createPlace = async (req, res, next) => {
     adress,
     creator,
     image:
-      'https://images.unsplash.com/photo-1513326738677-b964603b136d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=449&q=80',
+      'https://images.unsplash.com/photo-1568011507675-1bf8abf804cf?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1331&q=80',
   });
 
   try {

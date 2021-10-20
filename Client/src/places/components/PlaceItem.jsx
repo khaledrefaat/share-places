@@ -16,6 +16,8 @@ import { AuthContext } from '../../shared/context/auth-context';
 
 import CustomModal from '../../shared/components/UiElements/CustomModal';
 import Map from '../../shared/components/UiElements/Map';
+import { useHttpClient } from '../../shared/hooks/http-hook';
+import ErrorModal from '../../shared/components/UiElements/ErrorModal';
 
 import {
   placeItem,
@@ -31,12 +33,13 @@ const PlaceItem = ({
   title,
   description,
   adress,
-  creator,
+  creatorId,
   coordinates,
+  onDelete,
 }) => {
   const [openMap, setOpenMap] = useState(false);
   const [sohwConfirmButton, setShowConfirmButton] = useState(false);
-
+  const { isLoading, error, sendRequest, clearError } = useHttpClient();
   const openMapHandler = () => setOpenMap(true);
   const closeMapHandler = () => setOpenMap(false);
 
@@ -44,7 +47,11 @@ const PlaceItem = ({
 
   const cancelDeleteHandler = () => setShowConfirmButton(false);
 
-  const confirmDeletHandler = () => console.log('deleting...');
+  const confirmDeletHandler = () => {
+    sendRequest(`http://localhost:5000/api/places/${id}`, 'Delete');
+    cancelDeleteHandler();
+    onDelete(id);
+  };
 
   const auth = useContext(AuthContext);
 
@@ -83,6 +90,7 @@ const PlaceItem = ({
 
   return (
     <>
+      {error ? <ErrorModal error={error} clearError={clearError} /> : null}
       <CustomModal
         onClose={closeMapHandler}
         open={openMap}
@@ -105,6 +113,7 @@ const PlaceItem = ({
       </CustomModal>
 
       <Card className={placeItem}>
+        {isLoading && <CustomModal spinner={true} />};
         <CardActionArea>
           <CardMedia className={placeItem__image} image={image} title={title} />
           <CardContent>
@@ -127,7 +136,7 @@ const PlaceItem = ({
           >
             View On map
           </ColorButton>
-          {auth.isLoggedIn && (
+          {auth.isLoggedIn && auth.userId === creatorId && (
             <>
               <Button variant="contained" color="primary">
                 <Link className={placeItem__link} to={`/places/${id}`}>

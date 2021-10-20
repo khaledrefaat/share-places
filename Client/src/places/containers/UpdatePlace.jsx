@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
 
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
@@ -11,9 +11,11 @@ import {
   VALIDATOR_REQUIRE,
   VALIDATOR_MINLENGTH,
 } from '../../shared/util/validators';
-import DUMMY_PLACES from '../../shared/DummyPlaces';
 import Input from '../../shared/components/FormElements/Input';
 import { useForm } from '../../shared/hooks/form-hook';
+import CustomModal from '../../shared/components/UiElements/CustomModal';
+import ErrorModal from '../../shared/components/UiElements/ErrorModal';
+import { useHttpClient } from '../../shared/hooks/http-hook';
 
 const useStyles = makeStyles({
   margin: {
@@ -24,7 +26,9 @@ const useStyles = makeStyles({
 const UpdatePlace = () => {
   const { placeId } = useParams();
   const classes = useStyles();
-
+  const { isLoading, error, sendRequest, clearError } = useHttpClient();
+  const [place, setPlace] = useState();
+  const history = useHistory();
   const [formState, inputHandler, setFormData] = useForm(
     {
       title: {
@@ -39,30 +43,66 @@ const UpdatePlace = () => {
     false
   );
 
-  const [isLoading, setIsLoading] = useState(true);
-
-  const identifiedPlace = DUMMY_PLACES.find(({ id }) => id === placeId);
-  const { title, description } = identifiedPlace;
-
   useEffect(() => {
-    if (identifiedPlace)
-      setFormData(
-        {
-          title: {
-            value: title,
-            isValid: true,
+    const fetchPlace = async () => {
+      try {
+        const res = await sendRequest(
+          `http://localhost:5000/api/places/${placeId}`
+        );
+        setFormData(
+          {
+            title: {
+              value: res.place.title,
+              isValid: true,
+            },
+            description: {
+              value: res.place.description,
+              isValid: true,
+            },
           },
-          description: {
-            value: description,
-            isValid: true,
-          },
-        },
-        true
-      );
-    setIsLoading(false);
-  }, [identifiedPlace, setFormData, title, description]);
+          true
+        );
+        setPlace(res.place);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    fetchPlace();
+  }, [sendRequest, placeId, setFormData]);
 
-  if (isLoading) return <div>Loading...</div>;
+  const updatePlace = async () => {
+    try {
+      await sendRequest(
+        `http://localhost:5000/api/places/${placeId}`,
+        'PATCH',
+        JSON.stringify({
+          title: formState.inputs.title.value,
+          description: formState.inputs.description.value,
+        }),
+        { 'Content-Type': 'application/json' }
+      );
+      // you can also use auth.userid
+      history.push(`/${place.creator}/places`);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  if (isLoading) return <CustomModal spinner={true} />;
+
+  if (!place && !error)
+    return (
+      <Grid
+        container
+        spacing={0}
+        direction="column"
+        alignItems="center"
+        justifyContent="flex-start"
+        style={{ minHeight: '100vh' }}
+      >
+        <h3>Could'nt find this place</h3>
+      </Grid>
+    );
 
   return (
     <Grid
@@ -73,49 +113,53 @@ const UpdatePlace = () => {
       justifyContent="flex-start"
       style={{ minHeight: '100vh' }}
     >
-      <form>
-        <FormControl>
-          <Box width={500} mb={2}>
-            <Input
-              id="title"
-              validators={[VALIDATOR_REQUIRE()]}
-              errorText="Please enter a valid title."
-              label="Title"
-              initialValue={formState.inputs.title.value}
-              initialValid={formState.inputs.title.isValid}
-              required
-              onInput={inputHandler}
-              fullWidth
-            />
-          </Box>
-          <Box width={500} mb={2}>
-            <Input
-              id="description"
-              validators={[VALIDATOR_MINLENGTH(5)]}
-              errorText="Please enter a valid description (at least 5 characters)."
-              label="Description"
-              multiline
-              minRows="5"
-              initialValue={formState.inputs.description.value}
-              initialValid={formState.inputs.description.isValid}
-              required
-              onInput={inputHandler}
-              fullWidth
-            />
-          </Box>
-          <Box>
-            <Button
-              className={classes.margin}
-              type="submit"
-              variant="contained"
-              color="primary"
-              disabled={!formState.isValid}
-            >
-              Update Place
-            </Button>
-          </Box>
-        </FormControl>
-      </form>
+      {error ? <ErrorModal error={error} clearError={clearError} /> : null}
+      {!isLoading && place && (
+        <form>
+          <FormControl>
+            <Box width={500} mb={2}>
+              <Input
+                id="title"
+                validators={[VALIDATOR_REQUIRE()]}
+                errorText="Please enter a valid title."
+                label="Title"
+                initialValue={place.title}
+                initialValid={true}
+                required
+                onInput={inputHandler}
+                fullWidth
+              />
+            </Box>
+            <Box width={500} mb={2}>
+              <Input
+                id="description"
+                validators={[VALIDATOR_MINLENGTH(5)]}
+                errorText="Please enter a valid description (at least 5 characters)."
+                label="Description"
+                multiline
+                minRows="5"
+                initialValue={place.description}
+                initialValid={true}
+                required
+                onInput={inputHandler}
+                fullWidth
+              />
+            </Box>
+            <Box>
+              <Button
+                className={classes.margin}
+                type="submit"
+                variant="contained"
+                color="primary"
+                disabled={!formState.isValid}
+                onClick={updatePlace}
+              >
+                Update Place
+              </Button>
+            </Box>
+          </FormControl>
+        </form>
+      )}
     </Grid>
   );
 };

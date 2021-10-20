@@ -10,16 +10,20 @@ const PlaceList = props => {
     return (
       <ul className={`${placeList} d-flex justify-content-around`}>
         {props.items.map(
-          ({ id, imageUrl, title, description, adress, creator, location }) => (
+          (
+            { _id, image, title, description, adress, creator, location },
+            index
+          ) => (
             <PlaceItem
-              key={id}
-              id={id}
-              image={imageUrl}
+              key={index}
+              id={_id}
+              image={image}
               title={title}
               description={description}
               adress={adress}
               creatorId={creator}
               coordinates={location}
+              onDelete={props.onPlaceDelete}
             />
           )
         )}

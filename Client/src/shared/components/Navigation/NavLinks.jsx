@@ -20,7 +20,7 @@ const NavLinks = ({ onNavItemClick }) => {
       </li>
       {auth.isLoggedIn && (
         <li onClick={onNavItemClick}>
-          <NavLink activeStyle={navActiveStyle} to="/u1/places">
+          <NavLink activeStyle={navActiveStyle} to={`/${auth.userId}/places`}>
             my places
           </NavLink>
         </li>

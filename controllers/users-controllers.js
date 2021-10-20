@@ -1,5 +1,4 @@
 const HttpError = require('../models/http-error');
-const uuid = require('uuid').v4;
 const { validationResult } = require('express-validator');
 
 const User = require('../models/user');
@@ -30,11 +29,11 @@ exports.login = async (req, res, next) => {
   if (!existingUser || existingUser.password !== password)
     return next(new HttpError('Email or Password is wrong.', 401));
 
-  return res.json({ message: 'Login Sucsess' });
+  return res.json({ message: 'Logged in ^_^', user: existingUser });
 };
 
 exports.signup = async (req, res, next) => {
-  const { name, password, email, image } = req.body;
+  const { name, password, email } = req.body;
 
   const validationErrorResult = validationResult(req);
   if (!validationErrorResult.isEmpty())
@@ -59,7 +58,7 @@ exports.signup = async (req, res, next) => {
     name,
     email,
     password,
-    image,
+    image: 'https://khaledrefaat.github.io/portfolio/assets//home-picture.jpg',
     places: [],
   });
 
@@ -69,5 +68,7 @@ exports.signup = async (req, res, next) => {
     return next(new HttpError('Signing up failed, Please try again.', 500));
   }
 
-  res.status(201).json({ message: createdUser });
+  res
+    .status(201)
+    .json({ message: 'signup was successfully ^_^ ', user: createdUser });
 };

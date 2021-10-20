@@ -17,10 +17,10 @@ export class UserList extends Component {
         {this.props.items.map(user => (
           <UserItem
             key={user.id}
-            id={user.id}
+            id={user._id}
             img={user.image}
             name={user.name}
-            placeCount={user.places}
+            placeCount={user.places.length}
           />
         ))}
       </ul>
