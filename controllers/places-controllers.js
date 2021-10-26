@@ -5,6 +5,7 @@ const HttpError = require('../models/http-error');
 const getCoordsForAdress = require('../util/location');
 const Place = require('../models/place');
 const User = require('../models/user');
+const fs = require('fs');
 
 exports.getPlaceById = async (req, res, next) => {
   const { pid } = req.params;
@@ -27,9 +28,6 @@ exports.getPlaceById = async (req, res, next) => {
 
 exports.getPlacesByUserId = async (req, res, next) => {
   const { uid } = req.params;
-  console.log(
-    'working -----------------------------------------------------------------------'
-  );
 
   let userWithPlaces;
   try {
@@ -52,8 +50,10 @@ exports.createPlace = async (req, res, next) => {
   const validationErrorResult = validationResult(req);
   const { title, description, adress, creator } = req.body;
 
-  if (!validationErrorResult.isEmpty())
+  if (!validationErrorResult.isEmpty()) {
+    console.log(validationErrorResult);
     return next(new HttpError('Invalid Inputs!', 422));
+  }
 
   let coordinates, user;
   try {
@@ -69,8 +69,7 @@ exports.createPlace = async (req, res, next) => {
     location: coordinates,
     adress,
     creator,
-    image:
-      'https://images.unsplash.com/photo-1568011507675-1bf8abf804cf?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1331&q=80',
+    image: req.file.path.replace(/\\/g, '/'),
   });
 
   try {
@@ -94,6 +93,7 @@ exports.createPlace = async (req, res, next) => {
     await user.save({ session: sess });
     sess.commitTransaction();
   } catch (err) {
+    console.log(err);
     return next(
       new HttpError('Something went wrong, could not create a place.', 500)
     );
@@ -152,6 +152,8 @@ exports.deletePlace = async (req, res, next) => {
   if (!place)
     return next(new HttpError("Could'nt find place for provided id.", 404));
 
+  const imagePath = place.image.replace(/\//g, '\\');
+
   try {
     const sess = await mongoose.startSession();
     sess.startTransaction();
@@ -165,6 +167,10 @@ exports.deletePlace = async (req, res, next) => {
       new HttpError("Something Went wrong, Could'nt delete the place.", 500)
     );
   }
+
+  fs.unlink(imagePath, err => {
+    console.log(err);
+  });
 
   res.status(200).json({ message: 'Deleted place.' });
 };

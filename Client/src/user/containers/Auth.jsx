@@ -12,6 +12,7 @@ import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 import { AuthContext } from '../../shared/context/auth-context';
 import CustomModal from '../../shared/components/UiElements/CustomModal';
+import ImageUpload from '../../shared/components/UiElements/ImageUpload';
 
 import { useHttpClient } from '../../shared/hooks/http-hook';
 
@@ -58,17 +59,18 @@ const Auth = () => {
       }
     } else {
       try {
+        const formData = new FormData();
+        formData.append('email', formState.inputs.email.value);
+        formData.append('name', formState.inputs.name.value);
+        formData.append('password', formState.inputs.password.value);
+        formData.append('image', formState.inputs.image.value);
+
+        console.log(formData);
+
         const { user } = await sendRequest(
           'http://localhost:5000/api/users/signup',
           'POST',
-          JSON.stringify({
-            name: formState.inputs.name.value,
-            email: formState.inputs.email.value,
-            password: formState.inputs.password.value,
-          }),
-          {
-            'Content-Type': 'application/json',
-          }
+          formData
         );
 
         authenticate.login(user._id);
@@ -85,6 +87,7 @@ const Auth = () => {
         {
           ...formState.inputs,
           name: undefined,
+          image: undefined,
         },
         formState.inputs.email.isValid && formState.inputs.password.isValid
       );
@@ -94,6 +97,10 @@ const Auth = () => {
           ...formState.inputs,
           name: {
             value: '',
+            isValid: false,
+          },
+          image: {
+            value: null,
             isValid: false,
           },
         },
@@ -116,20 +123,25 @@ const Auth = () => {
                 </Typography>
               </Box>
               {!isLoginMode && (
-                <Box mb={2}>
-                  <Input
-                    id="name"
-                    validators={[VALIDATOR_REQUIRE]}
-                    errorText="Please Enter A Name!"
-                    label="Name"
-                    name="name"
-                    initialValue={formState.inputs.name.value}
-                    initialValid={formState.inputs.name.isValid}
-                    required
-                    onInput={inputHandler}
-                    fullWidth
-                  />
-                </Box>
+                <>
+                  <Box mb={2}>
+                    <Input
+                      id="name"
+                      validators={[VALIDATOR_REQUIRE]}
+                      errorText="Please Enter A Name!"
+                      label="Name"
+                      name="name"
+                      initialValue={formState.inputs.name.value}
+                      initialValid={formState.inputs.name.isValid}
+                      required
+                      onInput={inputHandler}
+                      fullWidth
+                    />
+                  </Box>
+                  <Box mb={2}>
+                    <ImageUpload id="image" onInput={inputHandler} center />
+                  </Box>
+                </>
               )}
               <Box mb={2}>
                 <Input
@@ -167,7 +179,7 @@ const Auth = () => {
                 type="submit"
                 disabled={!formState.isValid}
               >
-                Login
+                {isLoginMode ? 'Login' : 'Sign Up'}
               </Button>
             </FormControl>
           </form>

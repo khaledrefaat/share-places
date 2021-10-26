@@ -14,9 +14,9 @@ export class UserList extends Component {
       );
     return (
       <ul className={`${userList}`}>
-        {this.props.items.map(user => (
+        {this.props.items.map((user, index) => (
           <UserItem
-            key={user.id}
+            key={index}
             id={user._id}
             img={user.image}
             name={user.name}

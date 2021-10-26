@@ -18,7 +18,7 @@ export class UserItem extends Component {
         <Link to={`/${id}/places`}>
           <div className={`${userItem__content}`}>
             <div className={`${userItem__img} center`}>
-              <Avatar src={img} alt={name} />
+              <Avatar src={`http://localhost:5000/${img}`} alt={name} />
             </div>
             <div className={`${userItem__info}`}>
               <h2>{name}</h2>

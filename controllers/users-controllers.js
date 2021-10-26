@@ -1,6 +1,5 @@
 const HttpError = require('../models/http-error');
 const { validationResult } = require('express-validator');
-
 const User = require('../models/user');
 
 exports.getUsers = async (req, res, next) => {
@@ -58,7 +57,7 @@ exports.signup = async (req, res, next) => {
     name,
     email,
     password,
-    image: 'https://khaledrefaat.github.io/portfolio/assets//home-picture.jpg',
+    image: req.file.path,
     places: [],
   });
 

@@ -73,6 +73,8 @@ const PlaceItem = ({
     </Button>
   );
 
+  console.log(image);
+
   const deleteButtons = (
     <div className={deleteModalButtons}>
       <Button variant="contained" color="primary" onClick={cancelDeleteHandler}>
@@ -113,9 +115,13 @@ const PlaceItem = ({
       </CustomModal>
 
       <Card className={placeItem}>
-        {isLoading && <CustomModal spinner={true} />};
+        {isLoading && <CustomModal spinner={true} />}
         <CardActionArea>
-          <CardMedia className={placeItem__image} image={image} title={title} />
+          <CardMedia
+            className={placeItem__image}
+            image={'http://localhost:5000/' + image}
+            title={title}
+          />
           <CardContent>
             <Typography gutterBottom variant="h4" component="h2">
               {title}
