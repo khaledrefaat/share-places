@@ -23,7 +23,6 @@ import {
   placeItem,
   placeItem__image,
   placeItem__buttons,
-  placeItem__link,
   deleteModalButtons,
 } from './PlaceItem.module.scss';
 
@@ -48,12 +47,16 @@ const PlaceItem = ({
   const cancelDeleteHandler = () => setShowConfirmButton(false);
 
   const confirmDeletHandler = () => {
-    sendRequest(`http://localhost:5000/api/places/${id}`, 'Delete');
+    sendRequest(`http://localhost:5000/api/places/${id}`, 'Delete', null, {
+      Authorization: 'Bearer ' + auth.token,
+    });
     cancelDeleteHandler();
     onDelete(id);
   };
 
   const auth = useContext(AuthContext);
+
+  console.log('Bearer ' + auth.token);
 
   const ColorButton = withStyles(theme => ({
     root: {
@@ -72,8 +75,6 @@ const PlaceItem = ({
       Close
     </Button>
   );
-
-  console.log(image);
 
   const deleteButtons = (
     <div className={deleteModalButtons}>
@@ -144,10 +145,13 @@ const PlaceItem = ({
           </ColorButton>
           {auth.isLoggedIn && auth.userId === creatorId && (
             <>
-              <Button variant="contained" color="primary">
-                <Link className={placeItem__link} to={`/places/${id}`}>
-                  Edit
-                </Link>
+              <Button
+                variant="contained"
+                color="primary"
+                component={Link}
+                to={`/places/${id}`}
+              >
+                Edit
               </Button>
               <Button
                 onClick={sohwDeleteWarningHandler}

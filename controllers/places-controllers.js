@@ -48,9 +48,9 @@ exports.getPlacesByUserId = async (req, res, next) => {
 
 exports.createPlace = async (req, res, next) => {
   const validationErrorResult = validationResult(req);
-  const { title, description, adress, creator } = req.body;
+  const { title, description, adress } = req.body;
 
-  if (!validationErrorResult.isEmpty()) {
+  if (!validationErrorResult.isEmpty() || !req.file.path) {
     console.log(validationErrorResult);
     return next(new HttpError('Invalid Inputs!', 422));
   }
@@ -68,12 +68,14 @@ exports.createPlace = async (req, res, next) => {
     description,
     location: coordinates,
     adress,
-    creator,
+    creator: req.userData.userId,
     image: req.file.path.replace(/\\/g, '/'),
   });
 
+  console.log(req.userData.userId);
+
   try {
-    user = await User.findById(creator);
+    user = await User.findById(req.userData.userId);
   } catch (err) {
     console.log(err);
     return next(
@@ -123,6 +125,9 @@ exports.editPlace = async (req, res, next) => {
     );
   }
 
+  if (place.creator.toString() !== req.userData.userId)
+    return next(new HttpError('Your are not allowed to edit this place!', 401));
+
   place.title = title;
   place.description = description;
   try {
@@ -152,6 +157,11 @@ exports.deletePlace = async (req, res, next) => {
   if (!place)
     return next(new HttpError("Could'nt find place for provided id.", 404));
 
+  if (place.creator._id.toString() !== req.userData.userId)
+    return next(
+      new HttpError('Your are not allowed to delete this place!', 401)
+    );
+
   const imagePath = place.image.replace(/\//g, '\\');
 
   try {
@@ -163,11 +173,10 @@ exports.deletePlace = async (req, res, next) => {
     await sess.commitTransaction();
   } catch (err) {
     console.log(err);
-    return next(
-      new HttpError("Something Went wrong, Could'nt delete the place.", 500)
-    );
+    // return next(
+    //   new HttpError("Something Went wrong, Could'nt delete the place.", 500)
+    // );
   }
-
   fs.unlink(imagePath, err => {
     console.log(err);
   });

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { useParams, useHistory } from 'react-router-dom';
 
 import Box from '@material-ui/core/Box';
@@ -16,6 +16,7 @@ import { useForm } from '../../shared/hooks/form-hook';
 import CustomModal from '../../shared/components/UiElements/CustomModal';
 import ErrorModal from '../../shared/components/UiElements/ErrorModal';
 import { useHttpClient } from '../../shared/hooks/http-hook';
+import { AuthContext } from '../../shared/context/auth-context';
 
 const useStyles = makeStyles({
   margin: {
@@ -24,6 +25,7 @@ const useStyles = makeStyles({
 });
 
 const UpdatePlace = () => {
+  const auth = useContext(AuthContext);
   const { placeId } = useParams();
   const classes = useStyles();
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
@@ -79,10 +81,12 @@ const UpdatePlace = () => {
           title: formState.inputs.title.value,
           description: formState.inputs.description.value,
         }),
-        { 'Content-Type': 'application/json' }
+        {
+          'Content-Type': 'application/json',
+          Authorization: 'Bearer ' + auth.token,
+        }
       );
-      // you can also use auth.userid
-      history.push(`/${place.creator}/places`);
+      history.push(`/${auth.userId}/places`);
     } catch (err) {
       console.log(err);
     }

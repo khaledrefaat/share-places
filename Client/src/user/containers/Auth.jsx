@@ -42,7 +42,7 @@ const Auth = () => {
 
     if (isLoginMode) {
       try {
-        const { user } = await sendRequest(
+        const res = await sendRequest(
           'http://localhost:5000/api/users/login',
           'POST',
           JSON.stringify({
@@ -53,7 +53,7 @@ const Auth = () => {
             'Content-Type': 'application/json',
           }
         );
-        authenticate.login(user._id);
+        authenticate.login(res.userId, res.token);
       } catch (err) {
         console.log(err);
       }
@@ -65,15 +65,13 @@ const Auth = () => {
         formData.append('password', formState.inputs.password.value);
         formData.append('image', formState.inputs.image.value);
 
-        console.log(formData);
-
-        const { user } = await sendRequest(
+        const res = await sendRequest(
           'http://localhost:5000/api/users/signup',
           'POST',
           formData
         );
 
-        authenticate.login(user._id);
+        authenticate.login(res.userId, res.token);
       } catch (err) {
         console.log(err);
       }
